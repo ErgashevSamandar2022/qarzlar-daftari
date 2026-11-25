@@ -17,7 +17,7 @@
   function run() {
     if (running) { again = true; return Promise.resolve(); }
     running = true;
-    return granted().then(function (ok) {
+    return Promise.resolve().then(granted).then(function (ok) {
       if (!ok) return;
       return channel().then(function () { return lp().getPending(); }).then(function (pend) {
         var old = ((pend && pend.notifications) || []).filter(function (n) { return n.id < TEST_ID; }).map(function (n) { return { id: n.id }; });

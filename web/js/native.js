@@ -8,7 +8,14 @@
   var CAP = window.Capacitor, N = {}, cache = {};
   N.isNative = !!(CAP && typeof CAP.isNativePlatform === 'function' && CAP.isNativePlatform());
   N.platform = CAP && CAP.getPlatform ? CAP.getPlatform() : 'web';
-  N.plugin = function (name) { if (!N.isNative) return null; return cache[name] || (cache[name] = CAP.registerPlugin(name)); };
+  N.plugin = function (name) {
+    if (!N.isNative) return null;
+    if (cache[name]) return cache[name];
+    /* Capacitor ish vaqtida bundlersiz: registerPlugin bo'lmasa, native ko'prik bergan Plugins ishlatiladi */
+    var p = typeof CAP.registerPlugin === 'function' ? CAP.registerPlugin(name) : (CAP.Plugins && CAP.Plugins[name]);
+    if (!p) throw new Error('Plagin topilmadi: ' + name);
+    return (cache[name] = p);
+  };
 
   /* ---------- baza ---------- */
   var KEY = 'qarzlar-daftari-v3', DBN = 'qarzlar', mem = null, sq = null, engine = 'localStorage', err = '', wt = 0, ready = null;
@@ -29,9 +36,10 @@
       if (ready) return ready;
       mem = lsGet();
       ready = !N.isNative ? Promise.resolve() : (function () {
+        try { N.plugin('CapacitorSQLite'); } catch (e0) { err = String(e0.message || e0); return Promise.resolve(); }
         var stuck = new Promise(function (res) { setTimeout(function () { if (engine !== 'sqlite') { err = err || 'SQLite 6 soniyada javob bermadi'; sq = null; } res(); }, 6000); });
         var work = (function () {
-        sq = N.plugin('CapacitorSQLite');
+        try { sq = N.plugin('CapacitorSQLite'); } catch (e) { err = String(e && e.message || e); sq = null; return Promise.resolve(); }
         return Promise.resolve()
           .then(function () { return sq.createConnection({ database: DBN, version: 1, encrypted: false, mode: 'no-encryption', readonly: false }).catch(function () { /* bor bo'lsa, davom etamiz */ }); })
           .then(function () { return sq.open(base()); })
