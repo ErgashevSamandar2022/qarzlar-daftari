@@ -29,6 +29,8 @@
       if (ready) return ready;
       mem = lsGet();
       ready = !N.isNative ? Promise.resolve() : (function () {
+        var stuck = new Promise(function (res) { setTimeout(function () { if (engine !== 'sqlite') { err = err || 'SQLite 6 soniyada javob bermadi'; sq = null; } res(); }, 6000); });
+        var work = (function () {
         sq = N.plugin('CapacitorSQLite');
         return Promise.resolve()
           .then(function () { return sq.createConnection({ database: DBN, version: 1, encrypted: false, mode: 'no-encryption', readonly: false }).catch(function () { /* bor bo'lsa, davom etamiz */ }); })
@@ -41,6 +43,8 @@
           })
           .then(function () { engine = 'sqlite'; return store.daily(); })
           .catch(function (e) { err = String(e && e.message || e); sq = null; engine = 'localStorage'; });
+        })();
+        return Promise.race([work, stuck]);
       })();
       return ready;
     },

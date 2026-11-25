@@ -103,7 +103,12 @@
   });
 
   /* baza (SQLite) ochilgach ishga tushadi */
-  Q.store.init().then(function () {
+  function fail(e) {
+    var d = document.getElementById('view') || document.body;
+    d.innerHTML = '<div style="padding:24px;font:15px sans-serif;color:#b00020"><b>Ilova xatosi</b><br>' + String(e && e.message || e).replace(/</g, '&lt;') + '<br><small>' + String(e && e.stack || '').slice(0, 400).replace(/</g, '&lt;') + '</small></div>';
+  }
+  window.addEventListener('error', function (ev) { if (!document.querySelector('#view > *')) fail(ev.error || ev.message); });
+  Q.store.init().catch(function () {}).then(function () {
     Q.db.init();
     Q.db.runRecurring();
     var first = !Q.db.state().profile.welcomed;
@@ -112,5 +117,5 @@
     refreshFx();
     Q.native.onBack(back);
     if (first) Q.welcome.show(); else { Q.notify.firstRun(); Q.notify.sync(); }
-  });
+  }).catch(fail);
 })(window.QD = window.QD || {});
