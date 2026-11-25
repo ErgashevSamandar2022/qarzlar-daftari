@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 150" role="img" aria-label="Ochiq daftar">
+  <ellipse cx="120" cy="132" rx="92" ry="9" fill="#2a3fb5" fill-opacity="0.12"/>
+  <path d="M120 38c-18-9-44-10-76-4v84c32-6 58-5 76 4z" fill="#f4f6ff" stroke="#2a3fb5" stroke-width="3" stroke-linejoin="round"/>
+  <path d="M120 38c18-9 44-10 76-4v84c-32-6-58-5-76 4z" fill="#ffffff" stroke="#2a3fb5" stroke-width="3" stroke-linejoin="round"/>
+  <path d="M120 38v84" stroke="#2a3fb5" stroke-width="3"/>
+  <path d="M60 56c16-3 34-2 48 3M60 72c16-3 34-2 48 3M60 88c16-3 34-2 48 3" stroke="#aeb8ef" stroke-width="3" stroke-linecap="round" fill="none"/>
+  <path d="M132 59c14-5 32-6 48-3M132 75c14-5 32-6 48-3" stroke="#aeb8ef" stroke-width="3" stroke-linecap="round" fill="none"/>
+  <path d="M52 40c-1 26-1 50 0 76" stroke="#ee6a5c" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+  <g transform="rotate(32 176 104)">
+    <rect x="150" y="98" width="62" height="11" rx="5.5" fill="#2a3fb5"/>
+    <rect x="150" y="98" width="14" height="11" rx="5.5" fill="#ee6a5c"/>
+    <path d="M212 98l12 5.5-12 5.5z" fill="#f2c9a0"/>
+  </g>
+</svg>

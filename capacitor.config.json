@@ -1,0 +1,12 @@
+{
+  "appId": "uz.qarzlar.daftari",
+  "appName": "Qarzlar daftari",
+  "webDir": "www",
+  "server": { "androidScheme": "https" },
+  "android": { "allowMixedContent": false },
+  "plugins": {
+    "CapacitorHttp": { "enabled": true },
+    "LocalNotifications": { "smallIcon": "ic_stat_notify", "iconColor": "#2A3FB5" },
+    "StatusBar": { "overlaysWebView": false }
+  }
+}

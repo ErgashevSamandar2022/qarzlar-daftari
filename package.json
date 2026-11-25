@@ -1,0 +1,26 @@
+{
+  "name": "qarzlar-daftari",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Qarzlar daftari: shaxsiy qarz va kirim-chiqim hisobi (Android ilova)",
+  "scripts": {
+    "build:web": "node scripts/build-www.mjs"
+  },
+  "dependencies": {
+    "@capacitor/android": "^6.1.2",
+    "@capacitor/app": "^6.0.0",
+    "@capacitor/core": "^6.1.2",
+    "@capacitor/filesystem": "^6.0.0",
+    "@capacitor/local-notifications": "^6.0.0",
+    "@capacitor/share": "^6.0.0",
+    "@capacitor/status-bar": "^6.0.0",
+    "@capacitor-community/contacts": "^6.0.0",
+    "@capacitor-community/sqlite": "^6.0.0",
+    "@fontsource-variable/onest": "^5.1.0",
+    "@fontsource-variable/unbounded": "^5.1.0"
+  },
+  "devDependencies": {
+    "@capacitor/assets": "^3.0.5",
+    "@capacitor/cli": "^6.1.2"
+  }
+}
