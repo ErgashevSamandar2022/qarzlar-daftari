@@ -1,0 +1,58 @@
+name: APK yig'ish
+
+on:
+  workflow_dispatch: {}
+  push:
+    branches: [main, master]
+
+jobs:
+  apk:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - name: Paketlarni o'rnatish
+        run: npm install --no-audit --no-fund
+
+      - name: Veb qismni tayyorlash (shriftlar bilan)
+        run: node scripts/build-www.mjs
+
+      - name: Android loyihani yaratish
+        run: npx cap add android
+
+      - name: Ruxsatlar va ikonkalar
+        run: |
+          node scripts/patch-android.mjs
+          npx capacitor-assets generate --android --iconBackgroundColor '#2a3fb5' --iconBackgroundColorDark '#2a3fb5' --splashBackgroundColor '#eceef7' --splashBackgroundColorDark '#090c22'
+
+      - name: Sinxronlash
+        run: npx cap sync android
+
+      - name: Doimiy imzo kaliti
+        run: |
+          mkdir -p ~/.android
+          cp signing/debug.keystore ~/.android/debug.keystore
+
+      - name: APK yig'ish
+        working-directory: android
+        run: |
+          chmod +x gradlew
+          ./gradlew assembleDebug --no-daemon
+
+      - name: APK ni nomlash
+        run: cp android/app/build/outputs/apk/debug/app-debug.apk qarzlar-daftari.apk
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: qarzlar-daftari-apk
+          path: qarzlar-daftari.apk
+          retention-days: 60
