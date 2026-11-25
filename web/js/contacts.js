@@ -41,7 +41,7 @@
     var el = ev.target.closest('[data-act="pick-contact"]'); if (!el) return;
     var f = el.closest('form'), n = nameInput(f);
     var pick = WEB ? navigator.contacts.select(['name', 'tel'], { multiple: false }).then(function (r) { var c = r && r[0]; return c ? { name: c.name && c.name[0], tel: c.tel && c.tel[0] } : null; })
-      : Q.native.plugin('Contacts').pickContact({ projection: { name: true, phones: true } }).then(function (r) {
+      : Q.native.hold(Q.native.plugin('Contacts').pickContact({ projection: { name: true, phones: true } })).then(function (r) {
         var c = r && r.contact; if (!c) return null;
         return { name: c.name && (c.name.display || [c.name.given, c.name.family].filter(Boolean).join(' ')), tel: c.phones && c.phones[0] && c.phones[0].number };
       });

@@ -63,7 +63,7 @@
         '<button type="button" class="btn" data-act="st-clearsample"' + (S.sample ? '' : ' disabled') + '>Namunani tozalash</button><button type="button" class="btn danger" data-act="st-wipe">Hammasini o\'chirish</button>'),
       card(5, 'violet', 'lock', 'PIN-kod', "Ilovani ochishda 4 xonali kod so'raladi",
         '<p class="sc-stat"><span class="chip ' + (P.pin ? 'done' : '') + '">' + (P.pin ? 'Yoqilgan' : "O'chirilgan") + '</span></p>' +
-        (P.pin ? '<span class="lbl">Avtomatik qulflash</span>' + choices('autolock', [[1, '1 daqiqa'], [5, '5 daqiqa'], [15, '15 daqiqa'], [0, "Faqat qo'lda"]], P.autoLock) : '') +
+        (P.pin ? '<span class="lbl">Avtomatik qulflash</span>' + choices('autolock', [[-1, 'Chiqqanda darhol'], [1, '1 daqiqa'], [5, '5 daqiqa'], [15, '15 daqiqa'], [0, "Faqat qo'lda"]], P.autoLock) : '') +
         '<p class="sc-note">PIN ilovani boshqalar ko\'rib qolishidan saqlaydi. Ma\'lumot shifrlanmaydi.</p>',
         P.pin ? '<button type="button" class="btn" data-act="st-pin" data-m="change">O\'zgartirish</button><button type="button" class="btn" data-act="st-lock">' + ic('lock', 15) + 'Qulflash</button><button type="button" class="btn danger" data-act="st-pin" data-m="off">O\'chirish</button>' : '<button type="button" class="btn primary" data-act="st-pin" data-m="set">' + ic('lock', 16) + "PIN o'rnatish</button>"),
       card(6, 'pink', 'chat', 'Xabar shablonlari', 'Qarzdorlarga ketadigan xabar matnlari', '<ul class="sc-tpl">' + tpl + '</ul>',
@@ -213,7 +213,7 @@
   }
   function lockRender() { lockEl().innerHTML = lockHTML(); }
   function lockShow() {
-    var P = Q.db.state().profile; if (!P.pin) return;
+    var S0 = Q.db.state(); if (!S0) return; var P = S0.profile; if (!P.pin) return;
     lock.buf = ''; lock.forgot = false; lockRender(); lockEl().hidden = false; document.body.style.overflow = 'hidden'; Q.locked = true;
     if (Q.ui.isOpen()) Q.ui.close();
   }
@@ -235,7 +235,8 @@
     }
   }
   function autoLockCheck(why) {
-    var P = Q.db.state().profile; if (!P.pin || Q.locked || !P.autoLock) return;
+    var S0 = Q.db.state(); if (!S0) return; var P = S0.profile; if (!P.pin || Q.locked || !P.autoLock) return;
+    if (P.autoLock < 0) { if (why === 'visible' && !(Q.native && Q.native.held())) lockShow(); return; }
     var idleMs = Date.now() - (why === 'visible' ? lock.hiddenAt : lock.last);
     if (idleMs > P.autoLock * 60000) lockShow();
   }
@@ -345,7 +346,7 @@
         if (v.nw.value !== v.nw2.value) { showErr('PIN kodlar bir xil emas.'); return; }
         var salt = U.uid();
         hashPin(v.nw.value, salt).then(function (r) {
-          Q.db.setProfile({ pin: { salt: salt, alg: r.alg, hash: r.hash }, autoLock: P.autoLock || 5 });
+          Q.db.setProfile({ pin: { salt: salt, alg: r.alg, hash: r.hash }, autoLock: m === 'set' ? -1 : (P.autoLock || -1) });
           ui.close(); Q.app.render(); ui.toast(m === 'set' ? 'PIN o\'rnatildi' : 'PIN o\'zgartirildi');
         });
       };
@@ -357,6 +358,10 @@
   Q.settings = {
     apply: apply,
     after: fillNotif,
+    setPin: function (pin) {
+      var salt = U.uid();
+      return hashPin(pin, salt).then(function (r) { Q.db.setProfile({ pin: { salt: salt, alg: r.alg, hash: r.hash }, autoLock: -1 }); });
+    },
     boot: function () { apply(); lock.last = Date.now(); if (Q.db.state().profile.pin) lockShow(); }
   };
 })(window.QD = window.QD || {});

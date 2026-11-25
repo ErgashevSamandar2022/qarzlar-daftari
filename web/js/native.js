@@ -100,10 +100,10 @@
       try { var u = URL.createObjectURL(blob), a = document.createElement('a'); a.href = u; a.download = name; document.body.appendChild(a); a.click(); a.remove(); setTimeout(function () { URL.revokeObjectURL(u); }, 4000); return Promise.resolve(true); }
       catch (e) { return Promise.resolve(false); }
     }
-    return toB64(blob).then(function (b64) { return N.plugin('Filesystem').writeFile({ path: name, data: b64, directory: 'CACHE' }); })
+    return N.hold(toB64(blob).then(function (b64) { return N.plugin('Filesystem').writeFile({ path: name, data: b64, directory: 'CACHE' }); })
       .then(function (r) { return N.plugin('Share').share({ title: name, url: r.uri, dialogTitle: 'Faylni saqlang yoki yuboring' }); })
       .then(function () { return true; })
-      .catch(function (e) { return /cancel/i.test(String(e && e.message || e)); });
+      .catch(function (e) { return /cancel/i.test(String(e && e.message || e)); }));
   };
 
   /* ---------- orqaga tugmasi ---------- */
@@ -132,5 +132,9 @@
     setTimeout(function () { try { t.scrollIntoView({ block: 'center', behavior: 'smooth' }); } catch (x) { /* yo'q */ } }, 350);
   });
 
+  /* tizim oynalari (ulashish, ruxsat) ochilganda ilova "chiqib ketdi" deb hisoblanmasin */
+  var held = 0, heldUntil = 0;
+  N.hold = function (pr) { held++; return Promise.resolve(pr).then(function (v) { held--; heldUntil = Date.now() + 1500; return v; }, function (e) { held--; heldUntil = Date.now() + 1500; throw e; }); };
+  N.held = function () { return held > 0 || Date.now() < heldUntil; };
   Q.native = N;
 })(window.QD = window.QD || {});

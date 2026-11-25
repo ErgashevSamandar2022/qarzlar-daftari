@@ -9,7 +9,7 @@
   /* birinchi ishga tushganda internet bo'lmasa ishlatiladigan Markaziy bank kursi (20-noyabr 2026) */
   function blankFx() { return { rates: { USD: 12004.48, EUR: 13155.71 }, date: '2026-11-20', fetchedAt: '', manual: { USD: 0, EUR: 0 } }; }
   function blank() {
-    return { profile: { name: '', cur: 'UZS', lead: 3, theme: 'system', pin: null, autoLock: 5, times: ['09:00', '15:00', '21:00'], tpl: {}, lastBackup: '', welcomed: false }, fx: blankFx(), debts: [], entries: [], reminders: [], messages: [], recurring: [], sample: false };
+    return { profile: { name: '', cur: 'UZS', lead: 3, theme: 'system', pin: null, autoLock: -1, times: ['09:00', '15:00', '21:00'], tpl: {}, lastBackup: '', welcomed: false }, fx: blankFx(), debts: [], entries: [], reminders: [], messages: [], recurring: [], sample: false };
   }
   /* saqlangan matnni tekshirib, yangi tuzilishga keltiradi; yaroqsiz bo'lsa null */
   function parse(r) {

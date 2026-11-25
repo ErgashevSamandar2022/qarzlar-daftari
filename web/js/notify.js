@@ -47,7 +47,7 @@
     },
     request: function () {
       if (!N.isNative) return Promise.resolve('web');
-      return lp().requestPermissions().then(function (p) { if (p.display === 'granted') notify.sync(); return p.display; }).catch(function () { return 'error'; });
+      return N.hold(lp().requestPermissions()).then(function (p) { if (p.display === 'granted') notify.sync(); return p.display; }).catch(function () { return 'error'; });
     },
     openExact: function () { return lp().changeExactNotificationSetting().catch(function () { /* yo'q */ }); },
     /* sinov: 5 soniyadan keyin bildirishnoma chiqadi */
