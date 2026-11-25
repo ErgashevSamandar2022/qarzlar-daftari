@@ -4,6 +4,18 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="claude:viewport-fit-sides" content="cover">
 <title>Qarzlar daftari</title>
+<script>
+/* xato ekranda ko'rinishi uchun (oppoq ekranda sababni bilish) */
+window.__errs = [];
+function __show() {
+  var d = document.getElementById('qd-err');
+  if (!d) { d = document.createElement('pre'); d.id = 'qd-err'; d.style.cssText = 'position:fixed;left:0;right:0;top:0;z-index:99999;margin:0;padding:48px 14px 14px;background:#fff;color:#b00020;font:12px monospace;white-space:pre-wrap;max-height:100%;overflow:auto'; (document.body || document.documentElement).appendChild(d); }
+  d.textContent = 'Xato (shuni yuboring):\n' + window.__errs.join('\n');
+}
+window.addEventListener('error', function (e) { window.__errs.push((e.message || 'xato') + ' @' + String(e.filename || '').split('/').slice(-2).join('/') + ':' + (e.lineno || '')); __show(); });
+window.addEventListener('unhandledrejection', function (e) { window.__errs.push('promise: ' + String(e.reason && (e.reason.stack || e.reason.message) || e.reason)); __show(); });
+setTimeout(function () { var v = document.getElementById('view'); var w = document.getElementById('welcome'); if ((!v || !v.children.length) && (!w || w.hidden)) { window.__errs.push('Ilova 8 soniyada ochilmadi (view bo\'sh)'); __show(); } }, 8000);
+</script>
 <link rel="icon" href="assets/images/logo.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
