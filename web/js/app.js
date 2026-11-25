@@ -97,7 +97,7 @@
   Q.app.back = back;
 
   document.addEventListener('visibilitychange', function () {
-    if (document.hidden) return;
+    if (document.hidden || !Q.db.state()) return;
     if (Q.db.runRecurring()) render();
     Q.notify.sync();
   });
@@ -116,6 +116,6 @@
     render();
     refreshFx();
     Q.native.onBack(back);
-    if (first) Q.welcome.show(); else { Q.notify.firstRun(); Q.notify.sync(); }
+    if (first) Q.welcome.show(); else { Q.welcome.askPin(); Q.notify.firstRun(); Q.notify.sync(); }
   }).catch(fail);
 })(window.QD = window.QD || {});
